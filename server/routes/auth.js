@@ -7,6 +7,6 @@ const route =express.Router()
 
 route.post('/login', login)
 
-route.post('/verify', authMiddleware , verify)
+route.get('/verify', authMiddleware , verify)
 
 export default route;
