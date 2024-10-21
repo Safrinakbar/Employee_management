@@ -5,40 +5,47 @@ const userContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Initialize loading as true
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const verifyUser = async () => {
       try {
         const token = localStorage.getItem('token');
+        
         if (token) {
           const response = await axios.get('http://localhost:5000/api/auth/verify', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
+
+          console.log('Response from verification:', response.data);  
+
           if (response.data.success) {
-            setUser(response.data.user);
+            setUser(response.data.user); 
           } else {
             setUser(null);
           }
         } else {
-          setUser(null);
+          setUser(null); 
         }
       } catch (error) {
-        console.error(error); // Log any error
-        setUser(null); // Optionally set user to null on error
+        console.error('Verification Error:', error);  
+        setUser(null);
       } finally {
-        setLoading(false); // Set loading to false after try-catch
+        setLoading(false); 
       }
     };
-    verifyUser();
+
+    verifyUser(); 
   }, []);
 
+  
   const login = (user) => {
     setUser(user);
   };
 
+ 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('token');
@@ -51,5 +58,7 @@ const AuthProvider = ({ children }) => {
   );
 };
 
+// Custom hook to use the Auth context in components
 export const useAuth = () => useContext(userContext);
-export default AuthProvider; // Make sure to export the correct component
+
+export default AuthProvider;
