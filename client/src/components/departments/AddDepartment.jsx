@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-
 const AddDepartment = () => {
   const [department, setDepartment] = useState({
     dep_name: '',
@@ -23,7 +22,6 @@ const AddDepartment = () => {
         headers: {
           "Authorization": `Bearer ${localStorage.getItem('token')}`
         }
-
       });
       console.log(localStorage.getItem('token'));
 
@@ -31,8 +29,9 @@ const AddDepartment = () => {
         navigate("/admin-dashboard/departments");
       }
     } catch (error) {
+      // Change alert to console log
       if (error.response && !error.response.data.success) {
-        alert(error.response.data.error);
+        console.log(error.response.data.error); // Log the error instead of alerting
       }
     }
   };

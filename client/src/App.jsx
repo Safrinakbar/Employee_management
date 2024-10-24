@@ -5,7 +5,9 @@ import PrivateRoutes from './utils/PrivateRoutes';
 import RoleBaseRoutes from './utils/RoleBaseRoutes';
 import AdminSummary from './components/Dashboard/Adminsummary';
 import Departmentlist from './components/departments/DepartmentList';
-import AddDepartment from './components/departments/adddepartment';
+import AddDepartment from './components/departments/AddDepartment';
+import EditDepartment from './components/departments/EditDepartment';
+import List from './components/employee/list';
 
 function App() {
   return (
@@ -30,9 +32,12 @@ function App() {
         >
           {/* Nested Routes */}
           <Route index element={<AdminSummary />} />
-          <Route path="departments" element={<Departmentlist />} />
-          <Route path="add-department" element={<AddDepartment />} />
-        </Route>
+          <Route path="/admin-dashboard/departments" element={<Departmentlist />} />
+          <Route path="/admin-dashboard/add-department" element={<AddDepartment />} />
+          <Route path="/admin-dashboard/department/:id" element={<EditDepartment />} />
+          <Route path="/admin-dashboard/employees" element={<List />} />
+
+          </Route>
       </Routes>
     </BrowserRouter>
   );
