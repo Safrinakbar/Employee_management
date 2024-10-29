@@ -8,6 +8,7 @@ const List = () => {
   const [employees, setEmployees] = useState([]);
   const [empLoading, setEmpLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filteredEmployees,setFilteredEmployees]= useState([])
 
   useEffect(() => {
     const fetchEmployee = async () => {
@@ -28,6 +29,7 @@ const List = () => {
             action: <EmployeeButtons Id={emp._id} />,
           }));
           setEmployees(data);
+          setFilteredEmployees(data)
         }
       } catch (error) {
         console.error("Error fetching employees:", error);
@@ -41,9 +43,15 @@ const List = () => {
     fetchEmployee();
   }, []);
 
-  const filteredEmployees = employees.filter(emp =>
-    emp.dep_name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleFilter = (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    setSearchTerm(searchTerm);
+    const filteredData = employees.filter((emp) =>
+      emp.name.toLowerCase().includes(searchTerm) || emp.dep_name.toLowerCase().includes(searchTerm)
+    );
+    setFilteredEmployees(filteredData);
+  };
+
 
   return (
     <div className="p-7">
@@ -55,8 +63,7 @@ const List = () => {
           type="text"
           placeholder="Search by dep name"
           className="px-4 py-2 border border-gray-300 rounded w-full"
-          value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
+          onChange={handleFilter}
         />
         <Link to="/admin-dashboard/add-employee" className="ml-4 px-4 py-2 bg-teal-600 rounded text-white w-full text-center">Add New Employee</Link>
       </div>
@@ -64,7 +71,7 @@ const List = () => {
         {empLoading ? (
           <div className="text-center">Loading...</div>
         ) : (
-          <DataTable columns={columns} data={filteredEmployees} />
+          <DataTable columns={columns} data={filteredEmployees} pagination />
         )}
       </div>
     </div>

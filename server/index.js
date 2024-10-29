@@ -19,6 +19,7 @@ app.use('/uploads/:id', express.static('uploads'));
 app.use('/api/auth', authRouter);
 app.use('/api/department', departmentRouter);
 app.use('/api/employee', employeeRouter);
+app.post('/edit/:id',authRouter)
 
 // Start the server
 const PORT = process.env.PORT || 5000; // Use a default port if not specified

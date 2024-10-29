@@ -8,4 +8,5 @@ router.get('/',authMiddleware,getEmployees)
 router.post('/add', upload.single('image'),addEmployee);
 router.get('/:id',authMiddleware,getEmployee)
 
+
 export default router;
