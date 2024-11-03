@@ -59,7 +59,7 @@ export const fetchDepartments = async () => {
 
 //employees for salary forum
 export const getEmployees = async (id) => {
-  let employees;
+  let employees = []; // Initialize as an empty array
   try {
     const response = await axios.get(`http://localhost:5000/api/employee/department/${id}`, {
       headers: {
@@ -69,9 +69,11 @@ export const getEmployees = async (id) => {
     console.log(response.data);
     if (response.data.success) {
       employees = response.data.employees;
+    } else {
+      console.warn("Failed to fetch employees:", response.data.message);
     }
   } catch (error) {
-    console.error("Error fetching departments:", error);
+    console.error("Error fetching employees:", error); 
     if (error.response && !error.response.data.success) {
       alert(error.response.data.error);
     }
@@ -80,14 +82,17 @@ export const getEmployees = async (id) => {
 };
 
 
+
 export const EmployeeButtons =({Id}) =>{
     const navigate = useNavigate()
     return(
         <div className="flex space-x-3">
             <button className="px-3 py-1 bg-blue-600 text-white " onClick={()=>navigate(`/admin-dashboard/employees/${Id}`)}>View</button>
             <button className="px-3 py-1 bg-green-600 text-white" onClick={()=>navigate(`/admin-dashboard/employees/edit/${Id}`)} >Edit</button>
-            <button className="px-3 py-1 bg-yellow-600 text-white" >Salary</button>
-            <button className="px-3 py-1 bg-red-600 text-white" >Leave</button>
+            <button className="px-3 py-1 bg-yellow-600 text-white" 
+                onClick={()=>navigate(`/admin-dashboard/employees/salary/${Id}`)}
+                 >Salary</button>
+            <button className="px-3 py-1 bg-red-600 text-white" onClick={()=> navigate(`/admin-dashboard/employees/leaves/${Id}`)}>Leave</button>
         </div>
     )
 }

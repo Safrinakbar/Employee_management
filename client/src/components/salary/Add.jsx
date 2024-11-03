@@ -4,12 +4,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { fetchDepartments, getEmployees } from "../../utils/EmployeeHelper";
 
 const Add = () => {
-  const [employee, setEmployee] = useState({
+  const [salary, setSalary] = useState({
     employeeId: "",
-    department: "",
     basicSalary: 0,
-    grossSalary: 0,
-    salaryDeduction: 0,
+    allowances: 0,
+    deduction: 0,
+    payDate:"",
   });
 
   const [departments, setDepartments] = useState([]);
@@ -27,36 +27,37 @@ const Add = () => {
 
   const handleDepartmentChange = async (e) => {
     const selectedDepartment = e.target.value;
-    setEmployee((prev) => ({ ...prev, department: selectedDepartment }));
-
     const emps = await getEmployees(selectedDepartment);
     setEmployees(emps);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEmployee((prevData) => ({ ...prevData, [name]: value }));
+    setSalary((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`http://localhost:5000/api/employee/${id}`, employee, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+        const response = await axios.post(`http://localhost:5000/api/salary/add`, salary, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        });
 
-      if (response.data.success) {
-        navigate("/admin-dashboard/employees");
-      }
+        if (response.data.success) {
+            navigate("/admin-dashboard/employees");
+        }
     } catch (error) {
-      if (error.response && !error.response.data.success) {
-        console.log(error.response.data.error);
-      }
+        if (error.response && !error.response.data.success) {
+            console.log(error.response.data.error);
+        } else {
+            console.error("An error occurred while submitting the salary:", error);
+        }
     }
-  };
+};
+
 
   return (
     <div className="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-md shadow-md">
@@ -68,7 +69,6 @@ const Add = () => {
             <label className="block text-sm font-medium text-gray-700">Department</label>
             <select
               name="department"
-              value={employee.department}
               onChange={handleDepartmentChange}
               className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
               required
@@ -86,7 +86,7 @@ const Add = () => {
             <label className="block text-sm font-medium text-gray-700">Employee ID</label>
             <select
               name="employeeId"
-              value={employee.employeeId}
+              value={salary.employeeId}
               onChange={handleChange}
               className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
               required
@@ -105,7 +105,7 @@ const Add = () => {
             <input
               type="number"
               name="basicSalary"
-              value={employee.basicSalary}
+              value={salary.basicSalary}
               onChange={handleChange}
               placeholder="Basic Salary"
               className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
@@ -117,12 +117,12 @@ const Add = () => {
             <label className="block text-sm font-medium text-gray-700">Gross Salary</label>
             <input
               type="number"
-              name="grossSalary"
-              value={employee.grossSalary}
+              name="allowances"
+              value={salary.allowances}
               onChange={handleChange}
               placeholder="Gross Salary"
               className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
-              required
+              
             />
           </div>
 
@@ -130,10 +130,24 @@ const Add = () => {
             <label className="block text-sm font-medium text-gray-700">Salary Deduction</label>
             <input
               type="number"
-              name="salaryDeduction"
-              value={employee.salaryDeduction}
+              name="deduction"
+              value={salary.deduction}
               onChange={handleChange}
               placeholder="Salary Deduction"
+              className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
+              
+            />
+          </div>
+
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Pay Date</label>
+            <input
+              type="date"
+              name="payDate"
+              value={salary.payDate}
+              onChange={handleChange}
+              placeholder="Payment date"
               className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
               required
             />

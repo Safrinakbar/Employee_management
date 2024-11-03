@@ -18,7 +18,7 @@ const View = () => {
           },
         });
 
-        console.log("Response received:", response.data); // Log the response data
+        console.log("Response received:", response.data); 
 
         if (response.data.success) {
           setEmployee(response.data.employee);

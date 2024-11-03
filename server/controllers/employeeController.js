@@ -121,22 +121,73 @@ const getEmployees = async (req, res) => {
 };
 
 const getEmployee = async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.params; // id is expected to be userId
+    console.log("Fetching employee with userId:", id); // Log the userId
+
     try {
-        const employee = await Employee.findById(id)
-            .populate('userId', { password: 0 }) // Exclude password from the user data
-            .populate("department"); // Populate department information
-        
-        // Check if the employee was found
+        let employee = await Employee.findById(id)
+            .populate('userId', { password: 0 })
+            .populate('department');
+
         if (!employee) {
+            console.log("Employee not found by ID, searching by userId:", id); // Log the attempt to find by userId
+            employee = await Employee.findOne({ userId: id }) // Ensure you're querying with userId
+                .populate('userId', { password: 0 })
+                .populate('department');
+        }
+
+        if (!employee) {
+            console.error("No employee found for userId:", id); // Log if employee is not found
             return res.status(404).json({ success: false, error: "Employee not found" });
         }
 
+        console.log("Employee found:", employee); // Log the found employee
         return res.status(200).json({ success: true, employee });
     } catch (error) {
-        console.error("Error fetching employee:", error); // Log the error for debugging
-        res.status(500).json({ success: false, error: error.message || "Server error while fetching employee" });
+        console.error("Error fetching employee:", error);
+        return res.status(500).json({ success: false, error: error.message || "Server error while fetching employee" });
     }
 };
 
-export { addEmployee, upload, getEmployees, getEmployee };
+
+
+
+
+
+
+const fetchEmployeesByDepId = async (req, res) => {
+    try {
+      const { id } = req.params;
+  
+      // Validate department ID format
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        console.error("Invalid department ID:", id);
+        return res.status(400).json({ success: false, error: "Invalid department ID" });
+      }
+  
+      // Log department ID before the query
+      console.log("Valid department ID received:", id);
+  
+      // Query for employees in the specified department
+      const employees = await Employee.find({ department: new mongoose.Types.ObjectId(id) })
+        .populate('userId', { password: 0 }) // Optionally populate 'userId' and exclude 'password'
+        .populate("department");
+  
+      // Check if employees are found
+      if (!employees.length) {
+        console.warn("No employees found for department ID:", id);
+        return res.status(404).json({ success: false, error: "No employees found for this department" });
+      }
+  
+      // Successfully found employees
+      return res.status(200).json({ success: true, employees });
+    } catch (error) {
+      console.error("Detailed error in fetchEmployeesByDepId:", error.stack || error);
+      return res.status(500).json({ success: false, error: "Server error while fetching employees by department ID" });
+    }
+  };
+  
+
+
+
+export { addEmployee, upload, getEmployees, getEmployee, fetchEmployeesByDepId};
