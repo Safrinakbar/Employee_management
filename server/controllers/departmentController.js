@@ -40,4 +40,15 @@ const editDepartment = async (req, res) => {
   }
 };
 
-export { addDepartment, getDepartments, editDepartment };
+const deleteDepartment = async(req,res) => {
+  try{
+    const {id} = req.params;
+    const deletedep = await Department.findById({_id: id})
+    await deletedep.deleteOne()
+    return res.status(200).json({success: true},deletedep)
+  }catch(error){
+    console.log(error);
+  }
+}
+
+export { addDepartment, getDepartments, editDepartment ,deleteDepartment};

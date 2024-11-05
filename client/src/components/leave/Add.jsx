@@ -26,7 +26,7 @@ const Add =()=>{
             });
       
             if (response.data.success) {
-              navigate("/employee-dashboard/leaves");
+              navigate(`/employee-dashboard/leaves/${user._id}`)
             }
           } catch (error) {
            
@@ -46,7 +46,7 @@ const Add =()=>{
                     <select name="leaveType" onChange={handleChange} className="mt-1 p-2 block w-full border border-gray-300 rounded-md" required>
                         <option value="">Select Department</option>
                         <option value="Sick Leave">Sick Leave</option>
-                        <option value="casual Leave">Casual Leave</option>
+                        <option value="Casual Leave">Casual Leave</option>
                         <option value="Annual Leave">Annual Leave</option>
                     </select>
                 </div>

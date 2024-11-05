@@ -20,22 +20,36 @@ const addLeave = async(req,res)=>{
     }
 }
 
-const getLeave = async(req,res) => {
-    try{
-       const {id} = req.params;
-       let leaves= await Leave.find({employeeId: id})
-       if(!leaves){
-          const employee = await Employee.findOne({userId: id})
+const getLeave = async (req, res) => {
+    try {
+        const { id, role } = req.params;
+        console.log(`Received ID: ${id}, Role: ${role}`);  
 
-          leaves = await Leave.find({employeeId: employee._id})
-       }
-       
-       return res.status(200).json({success: true, leaves})
-    }catch (error) {
-        console.error("Error saving salary:", error); 
-        return res.status(500).json({ success: false, error: "leave add server error" });
+        let leave;
+
+        if (role === "admin") {
+            console.log("Fetching leaves for admin with employeeId:", id); 
+            leave = await Leave.find({ employeeId: id });
+        } else {
+            const employee = await Employee.findOne({ userId: id });
+            if (!employee) {
+                return res.status(404).json({ success: false, message: "Employee not found" });
+            }
+            console.log("Employee found:", employee);  
+            leave = await Leave.find({ employeeId: employee._id });
+        }
+
+        return res.status(200).json({ success: true, leave });
+    } catch (error) {
+        console.error("Error fetching leaves:", error.response.data);
+        console.error("Status:", error.response.status);
+        console.error("Headers:", error.response.headers);
     }
-}
+    
+    }
+
+
+
 
 
 const getLeaves = async (req, res) => {
@@ -77,6 +91,7 @@ const getLeaveDetail = async (req,res) => {
                 }
             ]
         });
+        console.log("Received ID:", id);
 
         console.log("leaves details:", leave); 
         return res.status(200).json({ success: true, leave });

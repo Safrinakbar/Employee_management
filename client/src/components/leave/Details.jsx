@@ -23,7 +23,7 @@ const Detail = () => {
         console.log("Response received:", response.data);
 
         if (response.data.success) {
-          setLeave(response.data.leave); // Check this key based on your actual response
+          setLeave(response.data.leave); 
           console.log("Leave state set:", response.data.leave);
         } else {
           console.error("Failed to fetch leave details:", response.data.error);

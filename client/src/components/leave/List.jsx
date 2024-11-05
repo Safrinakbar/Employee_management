@@ -12,17 +12,19 @@ const List = () => {
     
     const fetchLeaves = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/leave/${id}`, {
+            const response = await axios.get(`http://localhost:5000/api/leave/${id}/${user.role}`, {
                 headers: {
-                    "Authorization": `Bearer ${localStorage.getItem('token')}`
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
                 },
             });
+            
     
             console.log("API Response:", response.data);
     
 
             if(response.data.success){
-               setLeaves(response.data.leaves); 
+                console.log(response.data);
+               setLeaves(response.data.leave); 
             }
         } catch (error) {
             console.error("Error fetching leaves:", error); 
@@ -57,17 +59,24 @@ const List = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {leaves.map((leave, index) => (
-                <tr key={leave._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <td className="px-6 py-3">{index + 1}</td>
-                <td className="px-6 py-3">{leave.leaveType}</td>
-                <td className="px-6 py-3">{new Date(leave.startDate).toLocaleDateString()}</td>
-                <td className="px-6 py-3">{new Date(leave.endDate).toLocaleDateString()}</td>
-                <td className="px-6 py-3">{leave.reason}</td>
-                <td className="px-6 py-3">{leave.status}</td>
-            </tr>
-        ))}
+  {Array.isArray(leaves) && leaves.length > 0 ? (
+    leaves.map((leave, index) => (
+      <tr key={leave._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+        <td className="px-6 py-3">{index + 1}</td>
+        <td className="px-6 py-3">{leave.leaveType}</td>
+        <td className="px-6 py-3">{new Date(leave.startDate).toLocaleDateString()}</td>
+        <td className="px-6 py-3">{new Date(leave.endDate).toLocaleDateString()}</td>
+        <td className="px-6 py-3">{leave.reason}</td>
+        <td className="px-6 py-3">{leave.status}</td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="6" className="text-center py-3">No leaves available</td>
+    </tr>
+  )}
 </tbody>
+
 
 
             </table>

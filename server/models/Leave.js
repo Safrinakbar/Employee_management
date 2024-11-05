@@ -26,11 +26,11 @@ const leaveSchema = new Schema({
         default:"Pending",
     },
     appliedAt:{
-        type:String,
+        type:Date,
         default: Date.now
     },
     updatedAt:{
-        type:String,
+        type:Date,
         default: Date.now
     }
 })
