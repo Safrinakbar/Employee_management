@@ -7,6 +7,10 @@ const route =express.Router()
 
 route.post('/login', login)
 
-route.get('/verify', authMiddleware , verify)
+route.get('/verify', (req, res) => {
+    console.log("Verify route hit"); // This log should appear in the terminal
+    res.status(200).json({ success: true, message: "User verified" });
+});
+
 
 export default route;

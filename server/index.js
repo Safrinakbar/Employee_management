@@ -22,6 +22,7 @@ app.use('/uploads/:id', express.static('uploads'));
 
 // Routes
 app.use('/api/auth', authRouter);
+
 app.use('/api/department', departmentRouter);
 app.use('/api/employee', employeeRouter);
 app.use('/api/salary',salaryRouter)

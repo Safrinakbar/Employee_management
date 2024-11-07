@@ -26,27 +26,23 @@ const getLeave = async (req, res) => {
         console.log(`Received ID: ${id}, Role: ${role}`);  
 
         let leave;
-
+        
         if (role === "admin") {
-            console.log("Fetching leaves for admin with employeeId:", id); 
             leave = await Leave.find({ employeeId: id });
         } else {
             const employee = await Employee.findOne({ userId: id });
             if (!employee) {
                 return res.status(404).json({ success: false, message: "Employee not found" });
             }
-            console.log("Employee found:", employee);  
             leave = await Leave.find({ employeeId: employee._id });
         }
-
+        
         return res.status(200).json({ success: true, leave });
     } catch (error) {
-        console.error("Error fetching leaves:", error.response.data);
-        console.error("Status:", error.response.status);
-        console.error("Headers:", error.response.headers);
+        console.error("Error fetching leaves:", error);
+        return res.status(500).json({ success: false, error: "Error fetching leaves" });
     }
-    
-    }
+};
 
 
 
@@ -78,6 +74,7 @@ const getLeaves = async (req, res) => {
 const getLeaveDetail = async (req,res) => {
     try {
         const {id} = req.params;
+        console.log(`Received ID: ${id}`);
         const leave = await Leave.findById({_id: id}).populate({
             path: "employeeId",
             populate: [

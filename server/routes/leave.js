@@ -6,8 +6,8 @@ const router = express.Router();
 
 router.post('/add',authMiddleware, addLeave);
 router.get('/:id/:role',authMiddleware, getLeave);
+router.get('/detail/:id/:role',authMiddleware, getLeaveDetail);
 router.put('/:id',authMiddleware, updateLeave);
-router.get('/detail/:id',authMiddleware, getLeaveDetail);
 router.get('/',authMiddleware,getLeaves)
 
 

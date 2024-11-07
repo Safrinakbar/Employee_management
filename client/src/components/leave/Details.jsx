@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Detail = () => {
-  const { id } = useParams();
+  const { id,role } = useParams();
   const [leave, setLeave] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -13,7 +13,7 @@ const Detail = () => {
     const fetchLeave = async () => {
       console.log(`Fetching leave with ID: ${id}`);
       try {
-        const url = `http://localhost:5000/api/leave/detail/${id}`;
+        const url = `http://localhost:5000/api/leave/detail/${id}/${role}`;
         const response = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -80,7 +80,7 @@ const Detail = () => {
               <div><strong>Reason:</strong> {leave.reason}</div>
               <div><strong>Department:</strong> {leave.employeeId?.department?.dep_name || "N/A"}</div>
               <div>
-                <p className="text-lg font-bold">{leave.status === "Pending" ? "Action" : "Status:"}</p>
+            
                 {leave.status === "Pending" ? (
                   <div className="flex space-x-2">
                     <button className="px-2 py-0.5 bg-teal-300 hover:bg-teal-400"

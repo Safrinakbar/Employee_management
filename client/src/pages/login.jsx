@@ -33,14 +33,20 @@ const Login = () => {
                 }
             }
         } catch (error) {
-            // Enhanced error handling
             console.error('Login Error:', error); // Log the full error for debugging
-            if (error.response && error.response.data && !error.response.data.success) {
-                setError(error.response.data.error); // Set error message from response
+            if (error.response) {
+                console.error('Error Response Data:', error.response.data);
+                console.error('Error Status:', error.response.status);
+                if (error.response.status === 404) {
+                    setError("Endpoint not found. Please check the server URL.");
+                } else if (!error.response.data.success) {
+                    setError(error.response.data.error); // Set error message from response
+                }
             } else {
-                setError("Server error"); // Fallback error message
+                setError("Network or server error");
             }
         }
+        
     }
 
     return (
